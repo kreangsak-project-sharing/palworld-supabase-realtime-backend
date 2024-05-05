@@ -1,4 +1,4 @@
-# Palworld-supabase-realtime-backend docker-compose
+# Palworld-supabase-realtime-backend
 Node backend for palworld server with supabase-realtime on docker
 
 # Palworld Dedicated Server Docker 
