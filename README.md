@@ -27,6 +27,4 @@ npx prisma generate
 TRUNCATE TABLE realtime_systeminfo RESTART IDENTITY;
 
 ## Clear logs in docker
-sudo docker logs -f --tail 100
-
 sudo sh -c "truncate -s 0 /var/lib/docker/containers/**/*-json.log"
