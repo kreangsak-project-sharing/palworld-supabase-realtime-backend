@@ -17,15 +17,19 @@ npx tsc --init
 
 ## Prisma
 npm install @prisma/client
+
 npm install prisma --save-dev
+
 npx prisma init --datasource-provider sqlite
 
 npx prisma migrate dev --name init
 
 npx prisma migrate dev --create-only
+
 npx prisma migrate dev
 
 npx prisma migrate reset
+
 npx prisma generate
 
 ## Reset id & data for supabase
