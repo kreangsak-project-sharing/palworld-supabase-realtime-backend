@@ -1,7 +1,7 @@
 # palworld-supabase-realtime-backend
 Node backend for palworld server with supabase-realtime
 
-# Docker
+# Docker-Compose
 sudo docker-compose up -d --build
 
 # Command
@@ -17,14 +17,13 @@ npx prisma init --datasource-provider sqlite
 
 npx prisma migrate dev --name init
 
-
 npx prisma migrate dev --create-only
 npx prisma migrate dev
 
-prisma migrate reset
+npx prisma migrate reset
 npx prisma generate
 
-## reset id & data
+## Reset id & data
 TRUNCATE TABLE realtime_systeminfo RESTART IDENTITY;
 
 ## Clear logs in docker
