@@ -1,6 +1,9 @@
 # Palworld-supabase-realtime-backend docker-compose
 Node backend for palworld server with supabase-realtime on docker
 
+# Palworld Dedicated Server Docker 
+https://github.com/thijsvanloef/palworld-server-docker
+
 # Docker-Compose
 sudo docker-compose up -d --build
 
