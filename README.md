@@ -10,7 +10,9 @@ sudo docker-compose up -d --build
 # Command
 ## Nodejs
 npm init -y
+
 npm install typescript ts-node @types/node --save-dev
+
 npx tsc --init
 
 ## Prisma
