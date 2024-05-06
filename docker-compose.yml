@@ -24,6 +24,3 @@ services:
       - .env
     volumes:
       - ./palworld:/palworld/
-
-volumes:
-  mongodb: {}
