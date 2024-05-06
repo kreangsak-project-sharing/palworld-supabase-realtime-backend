@@ -6,6 +6,7 @@ import {
   addSelectPolicy,
   enableRowLevelSecurity,
   enableSupabaseRealtime,
+  exposedSchemas,
   insertDataWithSpecificID,
 } from "./prisma/config";
 import {
@@ -44,4 +45,6 @@ app.listen(PORT, () => {
   addSelectPolicy();
   insertDataWithSpecificID();
   enableSupabaseRealtime();
+
+  exposedSchemas();
 });
