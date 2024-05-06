@@ -37,3 +37,19 @@ TRUNCATE TABLE realtime_systeminfo RESTART IDENTITY;
 
 ## Clear logs in docker in linux
 sudo sh -c "truncate -s 0 /var/lib/docker/containers/**/*-json.log"
+
+# Using Custom Schemas for supabase
+GRANT USAGE ON SCHEMA myschema TO anon, authenticated, service_role;
+GRANT ALL ON ALL TABLES IN SCHEMA myschema TO anon, authenticated, service_role;
+GRANT ALL ON ALL ROUTINES IN SCHEMA myschema TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA myschema TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA myschema GRANT ALL ON TABLES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA myschema GRANT ALL ON ROUTINES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA myschema GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
+
+// Initialize the JS client
+import { createClient } from '@supabase/supabase-js'
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { db: { schema: 'myschema' } })
+
+// Make a request
+const { data: todos, error } = await supabase.from('todos').select('*')
