@@ -78,12 +78,14 @@ export async function addSelectPolicy() {
 
       if (existingPolicies.length === 0) {
         await prisma.$executeRawUnsafe(`
-          CREATE POLICY select_anon_${table}_policy
-          ON ${table}
-          AS PERMISSIVE
-          FOR SELECT
-          TO anon
-          USING (true);
+        create policy "policy_name"
+        on "public"."realtime_loginrecord"
+        as PERMISSIVE
+        for SELECT
+        to anon
+        using (
+          true
+          );
         `);
 
         console.log(
