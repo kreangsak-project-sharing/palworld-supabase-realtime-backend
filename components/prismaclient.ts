@@ -83,7 +83,7 @@ export const playersUpdatePrisma = async () => {
   try {
     const dataAPI: PlayerData[] | null = await apiShowPlayers();
 
-    if (dataAPI?.length === 0 && players === 0) {
+    if (dataAPI?.length === players) {
       return;
     }
 
