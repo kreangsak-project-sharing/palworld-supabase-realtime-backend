@@ -149,7 +149,7 @@ export async function insertDataWithSpecificID() {
       where: { id: 1 },
       update: {},
       create: {
-        player_data: {},
+        player_data: [],
       },
     });
 
