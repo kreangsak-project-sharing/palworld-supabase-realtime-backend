@@ -111,7 +111,6 @@ export const playersUpdatePrisma = async () => {
     }));
 
     if (dataAPI?.length > playersData?.player_data.length) {
-      {
         const newPlayer = playerDataArray[playerDataArray.length - 1];
 
         await prisma.realtime_loginrecord.create({
@@ -131,7 +130,6 @@ export const playersUpdatePrisma = async () => {
           where: { id: 1 },
           data: { player_data: playerDataArray },
         });
-      }
     } else if (dataAPI?.length < playersData?.player_data.length) {
       await prisma.realtime_playersonline.update({
         where: { id: 1 },
