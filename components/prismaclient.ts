@@ -5,6 +5,25 @@ import { apiServerMetrics, apiShowPlayers } from "./palworldapi";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// Main Function
+
+//
+// Random
+function imageRandom() {
+  // Generate a random number between 1 and 7
+  const randomNumber = Math.floor(Math.random() * 7) + 1;
+
+  // Convert the random number to binary with leading zeros
+  const binaryString = randomNumber.toString(2).padStart(3, "0");
+
+  // Concatenate ".png" to the binary string
+  const randomImageName = binaryString + ".png";
+
+  return randomImageName;
+}
+
 //
 // getRamUsageinPrecen
 const ramUseinPrecen = () => {
@@ -16,6 +35,10 @@ const ramUseinPrecen = () => {
   const ramUsagePercentage = (usedMemory / totalMemory) * 100;
   return ramUsagePercentage.toFixed(0);
 };
+
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// Secondary Function
 
 //
 // systemInfoUpdate
@@ -67,7 +90,7 @@ export const systemInfoUpdatePrisma = async () => {
 
 //
 // playersUpdatePrisma
-interface PlayerData {
+interface PlayerFromAPI {
   name: string;
   playerId: string;
   userId: string;
@@ -78,10 +101,29 @@ interface PlayerData {
   level: number;
 }
 
+type PlayerData = {
+  name: string;
+  playerId: string;
+  userId: string;
+  ip: string;
+  ping: number;
+  location_x: number;
+  location_y: number;
+  level: number;
+  logintime: Date;
+  imagename: string;
+};
+
+interface PlayerFromDatabase {
+  id: number;
+  created_at: Date;
+  player_data: PlayerData[] | [];
+}
+
 let players: number = 0;
 export const playersUpdatePrisma = async () => {
   try {
-    const dataAPI: PlayerData[] | null = await apiShowPlayers();
+    const dataAPI: PlayerFromAPI[] | null = await apiShowPlayers();
 
     if (dataAPI?.length === players) {
       return;
@@ -94,9 +136,12 @@ export const playersUpdatePrisma = async () => {
       return;
     }
 
-    const playersData: any = await prisma.realtime_playersonline.findFirst({
-      where: { id: 1 },
-    });
+    const playersData: PlayerFromDatabase | null =
+      (await prisma.realtime_playersonline.findFirst({
+        where: { id: 1 },
+      })) as PlayerFromDatabase;
+
+    // console.log(playersData.player_data);
 
     // Transform data into the expected format
     const playerDataArray = dataAPI.map((player) => ({
@@ -108,98 +153,79 @@ export const playersUpdatePrisma = async () => {
       location_x: player.location_x,
       location_y: player.location_y,
       level: player.level,
+      logintime: new Date(),
+      imagename: imageRandom(),
     }));
 
     if (dataAPI?.length > playersData?.player_data.length) {
-        const newPlayer = playerDataArray[playerDataArray.length - 1];
+      const comparePlayersData = playerDataArray.filter((obj1) => {
+        return !playersData.player_data.some((o) => o.userId === obj1.userId);
+      });
 
+      // comparePlayersData.sort(
+      //   (a, b) => a.logintime.getTime() - b.logintime.getTime()
+      // );
+
+      // console.log(comparePlayersData);
+
+      for (const player of comparePlayersData) {
         await prisma.realtime_loginrecord.create({
           data: {
-            name: newPlayer.name,
-            playerId: newPlayer.playerId,
-            userId: newPlayer.userId,
-            ip: newPlayer.ip,
-            ping: newPlayer.ping,
-            location_x: newPlayer.location_x,
-            location_y: newPlayer.location_y,
-            level: newPlayer.level,
+            name: player.name,
+            playerId: player.playerId,
+            userId: player.userId,
+            ip: player.ip,
+            ping: player.ping,
+            location_x: player.location_x,
+            location_y: player.location_y,
+            level: player.level,
           },
         });
+      }
 
-        await prisma.realtime_playersonline.update({
-          where: { id: 1 },
-          data: { player_data: playerDataArray },
-        });
-    } else if (dataAPI?.length < playersData?.player_data.length) {
+      // await Promise.all(
+      //   comparePlayersData.map(async (player) => {
+      //     await prisma.realtime_loginrecord.create({
+      //       data: {
+      //         name: player.name,
+      //         playerId: player.playerId,
+      //         userId: player.userId,
+      //         ip: player.ip,
+      //         ping: player.ping,
+      //         location_x: player.location_x,
+      //         location_y: player.location_y,
+      //         level: player.level,
+      //       },
+      //     });
+      //   })
+      // );
+
+      // Merge existing player data with new data
+      // const mergedPlayerData = [
+      //   ...playersData.player_data,
+      //   comparePlayersData,
+      // ];
+
       await prisma.realtime_playersonline.update({
         where: { id: 1 },
-        data: { player_data: playerDataArray },
+        data: { player_data: comparePlayersData },
+      });
+    } else if (dataAPI?.length < playersData?.player_data.length) {
+      const logoutPlayerData = playersData.player_data.filter((obj1) => {
+        return playerDataArray.some((o) => o.userId === obj1.userId);
+      });
+
+      await prisma.realtime_playersonline.update({
+        where: { id: 1 },
+        data: { player_data: logoutPlayerData },
       });
     }
 
-    players = playersData?.player_data.length;
+    players = dataAPI.length;
   } catch (err) {
     console.error("Error updating players data:", err);
   }
 };
-
-// //
-// // playersUpdate
-// export const playersUpdatePrisma = async () => {
-//   try {
-//     const data = await apiShowPlayers();
-//     if (
-//       data.players.length > 0 &&
-//       data.players[data.players.length - 1].playerId === "None"
-//     ) {
-//       return;
-//     }
-
-//     const playersData = await prisma.realtime_playersonline.findFirst({
-//       where: { id: 1 },
-//     });
-
-//     // console.log(data.players);
-//     // console.log(playersData);
-//     // console.log((playersData?.player_data as any[]).length);
-//     // console.log(data.players[data.players.length - 1] ?? 0);
-
-//     if (data.players.length > 0) {
-//       if (data.players.length > (playersData?.player_data as any).length) {
-//         await prisma.realtime_loginrecord.create({
-//           data: {
-//             name: data.players[data.players.length - 1].name,
-//             playerId: data.players[data.players.length - 1].playerId,
-//             userId: data.players[data.players.length - 1].userId,
-//             ip: data.players[data.players.length - 1].ip,
-//             ping: data.players[data.players.length - 1].ping,
-//             location_x: data.players[data.players.length - 1].location_x,
-//             location_y: data.players[data.players.length - 1].location_y,
-//             level: data.players[data.players.length - 1].level,
-//           },
-//         });
-//       }
-
-//       await prisma.realtime_playersonline.update({
-//         where: { id: 1 },
-//         data: {
-//           player_data: data.players,
-//         },
-//       });
-//     } else if (
-//       data.players.length !== (playersData?.player_data as any).length
-//     ) {
-//       await prisma.realtime_playersonline.update({
-//         where: { id: 1 },
-//         data: {
-//           player_data: data.players,
-//         },
-//       });
-//     }
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
 
 //
 // metricsUpdate
