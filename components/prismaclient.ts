@@ -46,6 +46,7 @@ interface SystemData {
   cpu_temp: number;
   cpu_use: number;
   ram_use: number;
+  swap_use: number;
 }
 
 let previousSystem: SystemData | null = null;
@@ -54,7 +55,7 @@ export const systemInfoUpdatePrisma = async () => {
   try {
     const cpuTemp = await si.cpuTemperature();
     const cpuUsage = await si.currentLoad();
-    // const memInfo = await si.mem();
+    const memInfo = await si.mem();
 
     // console.log(memInfo);
 
@@ -63,6 +64,9 @@ export const systemInfoUpdatePrisma = async () => {
       cpu_use: Number(cpuUsage?.currentLoad.toFixed(0)),
       // ram_use: Number(((memInfo?.used / memInfo?.total) * 100).toFixed(0)),
       ram_use: Number(ramUseinPrecen()),
+      swap_use: Number(
+        ((memInfo?.swapused / memInfo?.swaptotal) * 100).toFixed(0)
+      ),
     };
 
     // Check if previousSystem is null or if any of the values in updateData are different from previousSystem
@@ -70,7 +74,8 @@ export const systemInfoUpdatePrisma = async () => {
       !previousSystem ||
       updateData.cpu_temp !== previousSystem.cpu_temp ||
       updateData.cpu_use !== previousSystem.cpu_use ||
-      updateData.ram_use !== previousSystem.ram_use
+      updateData.ram_use !== previousSystem.ram_use ||
+      updateData.swap_use !== previousSystem.swap_use
     ) {
       await prisma.realtime_systeminfo.update({
         where: { id: 1 },
@@ -123,20 +128,20 @@ interface PlayerFromDatabase {
 let players: number = 0;
 export const playersUpdatePrisma = async () => {
   try {
-    const dataAPI: PlayerFromAPI[] | null = await apiShowPlayers();
+    const dataAPI: PlayerFromAPI[] = await apiShowPlayers();
 
     if (dataAPI?.length === players) {
       return;
     }
 
     if (
-      !dataAPI ||
-      (dataAPI?.length > 0 && dataAPI[dataAPI?.length - 1].playerId === "None")
+      dataAPI?.length > 0 &&
+      dataAPI[dataAPI?.length - 1].playerId === "None"
     ) {
       return;
     }
 
-    const playersData: PlayerFromDatabase | null =
+    const playersData: PlayerFromDatabase | [] =
       (await prisma.realtime_playersonline.findFirst({
         where: { id: 1 },
       })) as PlayerFromDatabase;
@@ -201,14 +206,16 @@ export const playersUpdatePrisma = async () => {
       // );
 
       // Merge existing player data with new data
-      // const mergedPlayerData = [
-      //   ...playersData.player_data,
-      //   comparePlayersData,
-      // ];
+      const mergedPlayerData = [
+        ...playersData.player_data,
+        comparePlayersData[0],
+      ];
+
+      // console.log(mergedPlayerData);
 
       await prisma.realtime_playersonline.update({
         where: { id: 1 },
-        data: { player_data: comparePlayersData },
+        data: { player_data: mergedPlayerData },
       });
     } else if (dataAPI?.length < playersData?.player_data.length) {
       const logoutPlayerData = playersData.player_data.filter((obj1) => {
