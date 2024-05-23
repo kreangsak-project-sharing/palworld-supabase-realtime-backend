@@ -161,6 +161,7 @@ export async function insertDataWithSpecificID() {
         cpu_temp: 0,
         cpu_use: 0,
         ram_use: 0,
+        swap_use: 0,
       },
     });
 
