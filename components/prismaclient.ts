@@ -244,29 +244,53 @@ interface MetricsData {
   currentplayernum: number;
 }
 
-let previousMetricsData: number | null = 0; // Define previous with a specific type or null
-
 export const metricsUpdatePrisma = async () => {
   try {
     const data: MetricsData = await apiServerMetrics();
 
-    if (
-      !previousMetricsData ||
-      JSON.stringify(data?.currentplayernum) !==
-        JSON.stringify(previousMetricsData)
-    ) {
-      await prisma.realtime_metrics.upsert({
-        where: { id: 1 },
-        update: data,
-        create: { id: 1, ...data },
-      });
-
-      previousMetricsData = data.currentplayernum;
-    }
+    await prisma.realtime_metrics.upsert({
+      where: { id: 1 },
+      update: data,
+      create: { id: 1, ...data },
+    });
   } catch (err) {
     console.error(err);
   }
 };
+
+// //
+// // metricsUpdate
+// interface MetricsData {
+//   uptime: number;
+//   serverfps: number;
+//   maxplayernum: number;
+//   serverframetime: number;
+//   currentplayernum: number;
+// }
+
+// let previousMetricsData: number | null = 0; // Define previous with a specific type or null
+
+// export const metricsUpdatePrisma = async () => {
+//   try {
+//     const data: MetricsData = await apiServerMetrics();
+
+//     if (
+//       !previousMetricsData ||
+//       JSON.stringify(data?.currentplayernum) !==
+//         JSON.stringify(previousMetricsData)
+//     ) {
+//       await prisma.realtime_metrics.upsert({
+//         where: { id: 1 },
+//         update: data,
+//         create: { id: 1, ...data },
+//       });
+
+//       previousMetricsData = data.currentplayernum;
+//     }
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
 
 // //
 // // metricsUpdate
