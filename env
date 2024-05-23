@@ -1,1 +1,11 @@
+NODE_PORT=5000
+NODE_SUPABASE_URL=https://xxxxxxxxxxxxxxxxxxxxx.supabase.co
+NODE_SUPABASE_ANON_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+NODE_SUPABASE_SERVICE_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+NODE_PALWORLD_APIURL=http://yourIP:8212/v1/api/
+NODE_RCON_PORT=25575
+NODE_RCON_USER=admin
+NODE_RCON_PASSWORD=ServerPass
+
+DATABASE_URL="postgres://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
