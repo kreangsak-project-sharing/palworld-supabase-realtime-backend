@@ -61,4 +61,5 @@ model realtime_systeminfo {
   cpu_temp   Int
   cpu_use    Int
   ram_use    Int
+  swap_use   Int
 }
