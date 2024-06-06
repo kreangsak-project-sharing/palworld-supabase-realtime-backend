@@ -12,8 +12,8 @@ const prisma = new PrismaClient();
 //
 // Random
 function imageRandom() {
-  // Generate a random number between 1 and 7
-  const randomNumber = Math.floor(Math.random() * 7) + 1;
+  // Generate a random number between 1 and 111
+  const randomNumber = Math.floor(Math.random() * 111) + 1;
 
   // Convert the random number to binary with leading zeros
   const binaryString = randomNumber.toString(2).padStart(3, "0");
