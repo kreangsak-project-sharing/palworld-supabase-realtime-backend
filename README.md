@@ -18,6 +18,16 @@ npm i dotenv express nodemon
 npm i -D @types/express
 ```
 
+## package.json
+```
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "start": "node ./dist/index.js",
+    "dev": "nodemon index.ts"
+  },
+```
+
 ## Prisma
 ```
 npm install @prisma/client
