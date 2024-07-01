@@ -28,6 +28,13 @@ npm i -D @types/express
   },
 ```
 
+## tsconfig.json
+```
+"rootDir": "./"
+"allowJs": true
+"outDir": "./dist"
+```
+
 ## Prisma
 ```
 npm install @prisma/client
