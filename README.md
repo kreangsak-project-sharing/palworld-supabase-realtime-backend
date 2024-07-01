@@ -11,7 +11,7 @@ sudo docker-compose up -d --build
 ## Nodejs
 ```
 npm init -y
-npm install -D typescript @types/node
+npm install -D typescript @types/node ts-node
 npx tsc --init
 
 npm i dotenv express nodemon
