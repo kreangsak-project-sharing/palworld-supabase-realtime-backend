@@ -40,12 +40,14 @@ npm i -D @types/express
 npm install @prisma/client
 npm install prisma --save-dev
 npx prisma init
-npx prisma init --datasource-provider sqlite
-npx prisma migrate dev --name init
-npx prisma migrate dev --create-only
 npx prisma migrate dev
 npx prisma migrate reset
 npx prisma generate
+
+npx prisma init --datasource-provider sqlite
+npx prisma migrate dev --name init
+npx prisma migrate dev --create-only
+
 ```
 
 ## Reset id & data for supabase
