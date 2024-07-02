@@ -39,6 +39,7 @@ npm i -D @types/express
 ```
 npm install @prisma/client
 npm install prisma --save-dev
+npx prisma init
 npx prisma init --datasource-provider sqlite
 npx prisma migrate dev --name init
 npx prisma migrate dev --create-only
