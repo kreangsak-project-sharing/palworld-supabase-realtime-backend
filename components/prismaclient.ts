@@ -15,11 +15,13 @@ function imageRandom() {
   // Generate a random number between 1 and 111
   const randomNumber = Math.floor(Math.random() * 111) + 1;
 
-  // Convert the random number to binary with leading zeros
-  const binaryString = randomNumber.toString(2).padStart(3, "0");
+  const addpadStart =
+    randomNumber < 100
+      ? randomNumber.toString().padStart(3, "0")
+      : randomNumber.toString();
 
   // Concatenate ".png" to the binary string
-  const randomImageName = binaryString + ".png";
+  const randomImageName = addpadStart + ".png";
 
   return randomImageName;
 }
