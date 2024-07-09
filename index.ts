@@ -27,7 +27,7 @@ const intervalId = setInterval(async () => {
   } catch (error: any) {
     console.error("Error updating Supabase:", error?.message);
   }
-}, 5000); // Update every 10 seconds
+}, 5000); // Update every 5 seconds
 
 // Stop the interval when the process is terminated
 process.on("SIGINT", () => {
