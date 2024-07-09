@@ -1,6 +1,5 @@
 import { config } from "dotenv";
-config();
-import express from "express";
+import express, { Request, Response, Application } from "express";
 
 import {
   addSelectPolicy,
@@ -15,7 +14,8 @@ import {
   systemInfoUpdatePrisma,
 } from "./components/prismaclient";
 
-const app = express();
+config();
+const app: Application  = express();
 app.use(express.json());
 
 // Function to repeatedly update Supabase
@@ -40,7 +40,7 @@ const PORT = process.env.NODE_PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
-  // // First config
+  // First config
   enableRowLevelSecurity();
   addSelectPolicy();
   insertDataWithSpecificID();
