@@ -58,6 +58,7 @@ TRUNCATE TABLE realtime_systeminfo RESTART IDENTITY;
 ## Clear logs in docker in linux
 ```
 sudo sh -c "truncate -s 0 /var/lib/docker/containers/**/*-json.log"
+sudo systemctl restart docker
 ```
 
 # Using Custom Schemas for supabase
